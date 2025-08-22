@@ -26,7 +26,6 @@ using UnityEngine;
 
     public virtual void Awake()
     {
-        Debug.Log("Singleton!");
         if (instance == null)
         {
             instance = this as T;

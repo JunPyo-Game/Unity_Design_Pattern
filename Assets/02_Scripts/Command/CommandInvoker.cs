@@ -1,5 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using UnityEngine;
 
 
@@ -32,14 +32,16 @@ using UnityEngine;
 
 */
 
-public class CommandInvoker : Singleton<CommandInvoker>
+public class CommandInvoker : MonoBehaviour
 {
     // 실행된 명령들을 순서대로 저장하는 리스트
-    private readonly List<ICommand> commandList = new();
+    static private readonly List<ICommand> commandList = new();
     // 현재 실행된 명령의 인덱스(Undo/Redo/Replay 시 기준이 됨)
-    private int currentIdx = 0;
+    static private int currentIdx = 0;
 
-    public void Execute(ICommand command)
+    static public IEnumerable<ICommand> CommandList => commandList;
+
+    static public void Execute(ICommand command)
     {
         // 전달받은 명령을 실행한다.
         command.Execute();
@@ -51,47 +53,38 @@ public class CommandInvoker : Singleton<CommandInvoker>
         currentIdx++;
     }
 
-    public void Undo()
+    static public void Undo()
     {
-            // Undo를 수행할 명령의 인덱스를 계산한다.
-            int idx = currentIdx - 1;
-            // 더 이상 Undo할 명령이 없으면 종료한다.
-            if (idx < 0)
-                return;
+        // Undo를 수행할 명령의 인덱스를 계산한다.
+        int idx = currentIdx - 1;
+        // 더 이상 Undo할 명령이 없으면 종료한다.
+        if (idx < 0)
+            return;
 
-            // 해당 명령의 Undo를 실행한다.
-            commandList[idx].Undo();
-            // 현재 인덱스를 Undo한 위치로 이동시킨다.
-            currentIdx = idx;
+        // 해당 명령의 Undo를 실행한다.
+        commandList[idx].Undo();
+        // 현재 인덱스를 Undo한 위치로 이동시킨다.
+        currentIdx = idx;
     }
 
-    public void Redo()
+    static public void Redo()
     {
-            // Redo를 수행할 명령의 인덱스를 계산한다.
-            int idx = currentIdx + 1;
-            // 더 이상 Redo할 명령이 없으면 종료한다.
-            if (idx >= commandList.Count)
-                return;
+        // Redo를 수행할 명령의 인덱스를 계산한다.
+        int idx = currentIdx + 1;
+        // 더 이상 Redo할 명령이 없으면 종료한다.
+        if (idx >= commandList.Count)
+            return;
 
-            // 현재 인덱스의 명령을 다시 실행한다.
-            commandList[currentIdx].Execute();
-            // 현재 인덱스를 Redo한 위치로 이동시킨다.
-            currentIdx = idx;
+        // 현재 인덱스의 명령을 다시 실행한다.
+        commandList[currentIdx].Execute();
+        // 현재 인덱스를 Redo한 위치로 이동시킨다.
+        currentIdx = idx;
     }
 
-    public void Replay()
+    static public void Clear()
     {
-        // 현재까지 실행된 모든 명령을 순서대로 재실행(리플레이)한다.
-        StartCoroutine(ReplayRoutine());
-    }
-
-    private IEnumerator ReplayRoutine()
-    {
-            // 0.5초 간격으로 명령을 순차적으로 실행한다.
-            for (int i = 0; i < currentIdx; i++)
-            {
-                commandList[i].Execute();
-                yield return new WaitForSeconds(0.5f);
-            }
+        commandList.Clear();
+        currentIdx = 0;
     }
 }
+
