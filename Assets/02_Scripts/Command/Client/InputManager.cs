@@ -11,7 +11,7 @@ public class InputManager : MonoBehaviour
 
     private void Awake()
     {
-        player = GetComponent<PlayerMove>();
+        player = FindAnyObjectByType<PlayerMove>();
     }
 
     private void Update()
@@ -29,24 +29,21 @@ public class InputManager : MonoBehaviour
             RunPlayerCommand(right);
 
         if (Input.GetKeyDown(KeyCode.C))
-            CommandInvoker.Instance.Undo();
+            CommandInvoker.Undo();
 
         if (Input.GetKeyDown(KeyCode.V))
-            CommandInvoker.Instance.Redo();
+            CommandInvoker.Redo();
 
         if (Input.GetKeyDown(KeyCode.R))
         {
             player.Reset();
-            CommandInvoker.Instance.Replay();
+            ReplayManager.Instance.Replay(CommandInvoker.CommandList);
         }
     }
 
     private void RunPlayerCommand(Vector3 movement)
     {
-        if (player.IsValidMove(movement))
-        {
-            ICommand command = new MoveCommand(player, movement);
-            CommandInvoker.Instance.Execute(command);
-        }
+        ICommand command = new MoveCommand(player, movement);
+        CommandInvoker.Execute(command);
     }
 }
