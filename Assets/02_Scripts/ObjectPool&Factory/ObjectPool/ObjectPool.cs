@@ -1,9 +1,13 @@
 using System;
 using System.Collections.Generic;
 
+/// <summary>
+/// 풀에 의해 관리되는 객체가 반드시 구현해야 하는 인터페이스입니다.
+/// 자신이 어떤 풀에 속해 있는지 참조를 저장할 수 있습니다.
+/// </summary>
 public interface IPool<T> where T : class, IPool<T>
 {
-    public ObjectPool<T> Pool { get; set; } 
+    public ObjectPool<T> Pool { get; set; }
 }
 
 public class ObjectPool<T> where T : class, IPool<T>
@@ -71,6 +75,7 @@ public class ObjectPool<T> where T : class, IPool<T>
         if (CountInactive == 0)
         {
             el = createFunc();
+            el.Pool = this;
             CountAll++;
         }
         else
@@ -89,20 +94,25 @@ public class ObjectPool<T> where T : class, IPool<T>
     /// <returns>성공 여부</returns>
     public void Release(T element)
     {
+        if (element.Pool != this)
+            throw new InvalidOperationException($"[ObjectPool] Invalid release attempt: The object ({element}) does not belong to this pool.");
+
         if (collectionCheck && CountInactive != 0)
-        {
-            foreach (T el in elements)
             {
-                if (el == element)
-                    throw new InvalidOperationException($"[ObjectPool] Duplicate release attempt: The object ({element}) is already in the pool and cannot be released again.");
+                foreach (T el in elements)
+                {
+                    if (el == element)
+                        throw new InvalidOperationException($"[ObjectPool] Duplicate release attempt: The object ({element}) is already in the pool and cannot be released again.");
+                }
             }
-        }
 
         onRelease?.Invoke(element);
 
         if (CountInactive < maxSize)
         {
             elements.Push(element);
+
+            return;
         }
 
         CountAll--;
@@ -110,36 +120,28 @@ public class ObjectPool<T> where T : class, IPool<T>
     }
 
     /// <summary>
-    /// 풀에 남은 모든 객체를 정리하고 비웁니다.
+    /// 풀에 남아있는 모든 객체를 정리하고 비웁니다. onDestroy 콜백이 있으면 각 객체마다 호출됩니다.
     /// </summary>
-    /// <remarks>onDestroy 콜백 또는 IDisposable.Dispose()가 호출됩니다.</remarks>
     public void Clear()
     {
-        if (onDestroy is not null)
+        if (onDestroy != null)
         {
             foreach (T el in elements)
+            {
                 onDestroy.Invoke(el);
+            }
         }
-
         CountAll = 0;
         elements.Clear();
     }
 
     /// <summary>
-    /// 해당 객체가 현재 풀에 포함되어 있는지 확인합니다.
+    /// 전달한 객체가 현재 풀에 포함되어 있는지 확인합니다.
     /// </summary>
     /// <param name="element">확인할 객체</param>
-    /// <returns>포함 여부</returns>
+    /// <returns>풀에 포함되어 있으면 true, 아니면 false</returns>
     public bool HasElement(T element)
     {
         return elements.Contains(element);
-    }
-
-    /// <summary>
-    /// 풀의 모든 객체를 정리합니다. (IDisposable 구현 시 Dispose 패턴 지원)
-    /// </summary>
-    public void Dispose()
-    {
-        Clear();
     }
 }

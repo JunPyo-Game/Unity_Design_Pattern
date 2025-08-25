@@ -24,7 +24,6 @@ public class BulletFactory : ScriptableObject, IFactory
     private Bullet Create()
     {
         Bullet bullet = Instantiate(bulletPrefab);
-        bullet.Pool = bulletPool;
         bullet.gameObject.SetActive(false);
 
         return bullet;

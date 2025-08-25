@@ -24,7 +24,6 @@ public class EnemyFactory : ScriptableObject, IFactory
     private Enemy Create()
     {
         Enemy enemy = Instantiate(enemyPrefab);
-        enemy.Pool = enemyPool;
         enemy.gameObject.SetActive(false);
 
         return enemy;
