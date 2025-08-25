@@ -635,3 +635,265 @@ public class MoveCommand : ICommand
 
 하지만, 조작하는 객체가 많아진다면 간단한 구조로는 모든 객체의 명령을 관리하기가 어려워진다.
 따라서 실제 실행하는 곳을 Invoker로 통일시켜 Invoker가 실행 요청을 받고 커맨드를 실행하고, 커맨드들을 보관하는 형태로 많은 객체들의 커맨드을 관리한다.
+
+---
+# 오브젝트 풀
+
+오브젝트 풀은 객체를 생성하고 파괴하는 과정을 최적화하는 디자인 패턴이다.
+한 번 생성된 객체를 파괴하지 않고 비활성화하여 관리하다가 객체가 필요할 때 활성화하여 재사용한다.
+객체가 필요할 때마다 매번 새로운 객체를 생성하고 파괴하는 것보다 효율적인 방식이다. 
+또한, 객체 생성과 파괴를 줄일 수 있기 때문에 GC로 인한 성능 저하도 최소화할 수 있다.
+
+---
+
+## 기본 구현
+
+### 객체 관리
+
+가장 최근에 사용하고 비활성된 객체는 캐시에 있을 확률이 높다.
+따라서 새로운 객체를 요구한다면 가장 최근에 사용되었던 객체를 다시 반환하는 하는 것이 성능 상으로 이점이 있을거이라 판단했다.
+
+이 경우 가장 마지막에 들어간 요소가 가장 먼저 나오는 LIFO 구조이기 때문에 스택을 사용해 객체를 관리하는 것이 적절해 보인다.
+
+```csharp
+public class ObjectPool<T>
+{
+	private readonly Stack<T> elements;
+}
+```
+
+그리고 전체 생산된 객체 수, 비활성된 객체 수, 활성된 객체 수를 관리하기 위한 프로퍼티를 선언했다.
+
+```csharp
+public int CountAll { get; private set; }
+public int CountInactive => elements.Count;
+public int CountActive => CountAll - CountInactive;
+```
+
+
+### 객체 할당
+
+먼저 할당에 해당하는 `Get()` 메서드를 구현한다. 
+
+`Get()` 메서드의 동작은 간단하게 스택의`Pop()` 메서드를 호출하여 반환된 객체르 그대로 리턴하면 된다.
+
+```csharp
+public T Get()
+{
+	return elements.Pop();
+}
+```
+
+그러나 스택이 비었을 때, 즉 비활성된 객체가 없을 때를 고려해야 한다. 
+만약 비활성화된 객체가 없다면 새로운 객체를 생성하여 반환하면 된다.
+`
+```csharp
+public T Get()
+{
+	T el;
+    if (CountInactive == 0)
+    {
+    	el = new T();
+        CountAll++;
+    }
+    else
+    {
+    	el = elements.Pop();
+	}
+    
+    return el;
+}
+```
+
+그런데, 여기서 `new`로 객체를 생성하려고 하니 컴파일 에러가 발생한다. 
+이는 T 타입에 매개변수를 받지 않는 생성자가 정의되어 있지 않을 수 있기 때문에 발생하는 에러이다.
+
+이를 해결하기 위한 방법으로 `ObjectPool<T>`클래스에 `new()` 제약조건을 설정하면 된다.
+이렇게 되면 매개변수를 받지 않는 생성자를 정의한 타입만 `ObjectPool<T>` 클래스의 타입 매개변수가 될 수 있다.
+
+그러나 이 방식은 다소 사용측에 불편을 유발한다고 생각한다. 
+매개변수가 없는 생성자가 필요하지 않거나 그런 생성자의 의미가 모호한 클래스라면 사용이 제한되기 때문이다.
+따라서 `ObjectPool<T>` 클래스의 생성자에서 객체를 생성할 수 있는 `Func<T>` 타입 델리게이틀 받아처리하기로 결정했다.
+
+```csharp
+public ObjectPool(Func<T> createFunc)
+{
+	this.createFunc = createFunc;
+}
+
+public T Get()
+{
+	T el;
+    if (CountInactive == 0)
+    {
+    	el = createFunc();
+        CountAll++;
+    }
+    else
+    {
+    	el = elements.Pop();
+	}
+    
+    return el;
+}
+```
+
+### 객체 해제
+
+객체 해제는 간단하게 인자로 받은 T 타입 객체를 스택에 넣어주면 된다.
+
+```csharp
+public void Release(T element)
+{
+	elements.Push(element);
+}
+```
+
+이정도만해도 제대로 작동하겠지만, 몇가지 안전 장치를 추가하고자 한다.
+
+먼저, 주목할 부분은 객체가 무한히 생성되고 삭제가 되지 않을 수 있다는 점이다.
+현재 오브젝트 풀에서는 해제보다 할당이 빠르다면 점점 메모리 공간을 계속 차지하게될 것이다. 
+따라서 메모리 공간을 일정이 이상 차지하지 않도록 최대 객체 수를 지정하고자 한다.
+
+```csharp
+public ObjectPool(Func<T> createFunc, int maxSize = 100)
+{
+	this.createFunc = createFunc;
+    this.maxSize = maxSize;
+}
+
+public void Release(T element)
+{
+	if (CountInactive < maxSize)
+	{
+    	elements.Push(element);
+	}
+    
+    CountAll--;
+}
+```
+수정한 코드에서는 비활성된 객체 수가 `maxSize`보다 작을 때만 스택에 넣는다.
+그렇지않다면 그냥 생산된 객체 수를 1 감소하고 리턴한다.
+
+다음은 중복 반환 문제이다. 
+현재 `Release`에서는 같은 객체를 여러번 반환하면 모두 반환에 성공한다.
+이는 절대 원하는 동작이 아니므로 아래와 같이 이미 스택에 같은 요소가 있는지 검사한다.
+
+```csharp
+public void Release(T element)
+{
+	if (CountInactive != 0)
+    {
+    	foreach (T el in elements)
+		{
+        	if (el == element)
+            	throw new InvalidOperationException();
+		}
+	}
+
+	...
+}
+```
+
+하지만 이런 순회를 `Release`를 호출할 때마다 수행하는 것은 부담스럽다.
+따라서 이 중복 반환 검사를 수행할지 여부를 생성자에서 받기로 했다.
+
+```csharp
+public ObjectPool(Func<T> createFunc, bool collectionCheck = true int maxSize = 100)
+{
+	this.createFunc = createFunc;
+    this.collectionCheck = collectionCheck;
+    this.maxSize = maxSize;
+}
+
+public void Release(T element)
+{
+	if (collectionCheck && CountInactive != 0)
+    {
+    	...
+	}
+
+	...
+}
+```
+
+### 할당/해제/파괴 시 액션
+
+지금까지 구현한 부분으로도 오브젝트 풀은 동작한다.
+추가적으로 할당할 때, 해제할 때, 파괴될 때의 수행되었으면 하는 동작을 사용자 지정할 수 있는 기능을 추가하고자 한다.
+
+사용자는 이런 액션을 사전에 등록함으로써 객체 할당/해제/파괴 시에 추가적인 코드를 작성해야 하는 수고를 덜 수 있다.
+
+```csharp
+public ObjectPool(
+    Func<T> createFunc,
+    Action<T> onGet = null,
+    Action<T> onRelease = null,
+    Action<T> onDestroy = null,
+    bool collectionCheck = true,
+    int defaultCapacity = 10,
+	int maxSize = 100)
+{
+    this.createFunc = createFunc;
+    this.onGet = onGet;
+    this.onRelease = onRelease;
+    this.onDestroy = onDestroy;
+    this.collectionCheck = collectionCheck;
+    this.maxSize = defaultCapacity > maxSize ? defaultCapacity : maxSize;
+	this.elements = new Stack<T>(defaultCapacity);
+}
+```
+이게 최종 생성자의 형태가 된다. 
+액션들은 어디까지나 사용자가 선택적으로 사용할 수 있도록 하기 위함이므로 기본 매개변수를 `null`로 지정했다.
+
+이제 할당/해제 메서드의 적절한 위치에서 액션을 호출하면 된다.
+```csharp
+public T Get()
+{
+    T el;
+
+    if (CountInactive == 0)
+    {
+        el = createFunc();
+        CountAll++;
+    }
+    else
+    {
+        el = elements.Pop();
+    }
+
+    onGet?.Invoke(el);
+    return el;
+}
+
+public void Release(T element)
+{
+    if (collectionCheck && CountInactive != 0)
+    {
+        foreach (T el in elements)
+        {
+            if (el == element)
+                throw new InvalidOperationException();
+        }
+    }
+
+    onRelease?.Invoke(element);
+
+    if (CountInactive < maxSize)
+    {
+        elements.Push(element);
+    }
+
+    CountAll--;
+    onDestroy?.Invoke(element);
+}
+```
+
+## 결론
+구현이 어려운 디자인 패턴은 아니였지만, 유니티에서 실제 사용하기 위해서 몇가지 더 고려해야 할 점이 있다.
+객체를 할당받는 곳과 객체를 해제하는 곳이 다르다는 점이다.
+예를 들면 총알을 발사하는 클래스는 총알이 언제 파괴되어야 하는지 알 수 없다.
+따라서 총알은 스스로 파괴되어야 하는 순간에 자신을 오브젝트 풀에 반환해야 한다.
+이에 대해서는 후술한 팩토리 패턴을 구현하면서 함께 해결하고자 한다.
+
+---
