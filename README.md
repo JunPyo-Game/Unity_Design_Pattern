@@ -775,49 +775,7 @@ public void Release(T element)
 수정한 코드에서는 비활성된 객체 수가 `maxSize`보다 작을 때만 스택에 넣는다.
 그렇지않다면 그냥 생산된 객체 수를 1 감소하고 리턴한다.
 
-다음은 중복 반환 문제이다. 
-현재 `Release`에서는 같은 객체를 여러번 반환하면 모두 반환에 성공한다.
-이는 절대 원하는 동작이 아니므로 아래와 같이 이미 스택에 같은 요소가 있는지 검사한다.
-
-```csharp
-public void Release(T element)
-{
-	if (CountInactive != 0)
-    {
-    	foreach (T el in elements)
-		{
-        	if (el == element)
-            	throw new InvalidOperationException();
-		}
-	}
-
-	...
-}
-```
-
-하지만 이런 순회를 `Release`를 호출할 때마다 수행하는 것은 부담스럽다.
-따라서 이 중복 반환 검사를 수행할지 여부를 생성자에서 받기로 했다.
-
-```csharp
-public ObjectPool(Func<T> createFunc, bool collectionCheck = true int maxSize = 100)
-{
-	this.createFunc = createFunc;
-    this.collectionCheck = collectionCheck;
-    this.maxSize = maxSize;
-}
-
-public void Release(T element)
-{
-	if (collectionCheck && CountInactive != 0)
-    {
-    	...
-	}
-
-	...
-}
-```
-
-마지막으로 해당 풀에서 생성하지 않은 객체를 반환하는 것을 막고자 한다. 
+다음 해당 풀에서 생성하지 않은 객체를 반환하는 것을 막고자 한다. 
 이를 위해서 풀에서 관리되는 객체임을 나타내기 위한 인터페이스를 정의했다.
 또한, `ObjectPool<T>`의 제약 조건도 추가했다.
 
@@ -859,6 +817,45 @@ public void Release(T element)
 }
 ```
 
+마지막으로 중복 반환 문제를 해결하려고 한다.
+간단한 방법으로는 스택을 순회해서 같은 객체가 있는지 판단할 수 있지만, 해제할 때마다 순회를 하는건 부담스럽다.
+따라서 이미 만들어둔 `IPool` 인터페이스에 반환 여부를 나타내는 플래그를 추가한다.
+
+```csharp
+public interface IPool<T> where T : class, IPool<T>
+{
+    public ObjectPool<T> Pool { get; set; }
+    public bool IsRelease { get; set; }
+}
+```
+이제 `Get`과 `Release`에서 적절한 위치에서 플래그를 교체해준다.
+그리고 `Release`에서는 플래그를 검사하여 이미 반환되었던 객체인지 검사하면 된다.
+
+```csharp
+public T Get()
+{
+    T el;
+
+    if (CountInactive == 0)
+    {
+        el = createFunc();
+        el.Pool = this;  // 풀 등록
+        el.IsRelease = false;
+        CountAll++;
+    }
+    ...
+}
+
+public void Release(T element)
+{
+    if (element.IsRelease)
+        // 중복 반환으로 예외를 던진다.
+    ...
+    element.IsRelease = true;
+    ...
+}
+```
+
 
 ### 할당/해제/파괴 시 액션
 
@@ -873,7 +870,6 @@ public ObjectPool(
     Action<T> onGet = null,
     Action<T> onRelease = null,
     Action<T> onDestroy = null,
-    bool collectionCheck = true,
     int defaultCapacity = 10,
 	int maxSize = 100)
 {
@@ -881,7 +877,6 @@ public ObjectPool(
     this.onGet = onGet;
     this.onRelease = onRelease;
     this.onDestroy = onDestroy;
-    this.collectionCheck = collectionCheck;
     this.maxSize = defaultCapacity > maxSize ? defaultCapacity : maxSize;
 	this.elements = new Stack<T>(defaultCapacity);
 }
@@ -893,17 +888,7 @@ public ObjectPool(
 ```csharp
 public T Get()
 {
-    T el;
-
-    if (CountInactive == 0)
-    {
-        el = createFunc();
-        CountAll++;
-    }
-    else
-    {
-        el = elements.Pop();
-    }
+    ...
 
     onGet?.Invoke(el);
     return el;
@@ -911,15 +896,7 @@ public T Get()
 
 public void Release(T element)
 {
-    if (collectionCheck && CountInactive != 0)
-    {
-        foreach (T el in elements)
-        {
-            if (el == element)
-                throw new InvalidOperationException();
-        }
-    }
-
+    ...
     onRelease?.Invoke(element);
 
     if (CountInactive < maxSize)
