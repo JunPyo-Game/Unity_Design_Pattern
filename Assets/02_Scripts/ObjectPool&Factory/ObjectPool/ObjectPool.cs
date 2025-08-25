@@ -1,7 +1,12 @@
 using System;
 using System.Collections.Generic;
 
-public class ObjectPool<T> where T : class
+public interface IPool<T> where T : class, IPool<T>
+{
+    public ObjectPool<T> Pool { get; set; } 
+}
+
+public class ObjectPool<T> where T : class, IPool<T>
 {
     private readonly Stack<T> elements;
     private readonly Func<T> createFunc;
@@ -41,24 +46,24 @@ public class ObjectPool<T> where T : class
         this.elements = new Stack<T>(defaultCapacity);
     }
 
-        /// <summary>
-        /// ObjectPool에 저장된 전체 객체 수(활성+비활성).
-        /// </summary>
+    /// <summary>
+    /// ObjectPool에 저장된 전체 객체 수(활성+비활성).
+    /// </summary>
     public int CountAll { get; private set; }
-        /// <summary>
-        /// 현재 풀에 남아있는(비활성) 객체 수.
-        /// </summary>
+    /// <summary>
+    /// 현재 풀에 남아있는(비활성) 객체 수.
+    /// </summary>
     public int CountInactive => elements.Count;
-        /// <summary>
-        /// 현재 사용 중(활성) 객체 수.
-        /// </summary>
+    /// <summary>
+    /// 현재 사용 중(활성) 객체 수.
+    /// </summary>
     public int CountActive => CountAll - CountInactive;
 
-        /// <summary>
-        /// 풀에서 객체를 하나 가져옵니다. 남은 객체가 없으면 새로 생성합니다.
-        /// </summary>
-        /// <returns>풀에서 꺼낸 객체</returns>
-        /// <exception cref="Exception">createFunc 또는 onGet에서 예외가 발생할 수 있습니다.</exception>
+    /// <summary>
+    /// 풀에서 객체를 하나 가져옵니다. 남은 객체가 없으면 새로 생성합니다.
+    /// </summary>
+    /// <returns>풀에서 꺼낸 객체</returns>
+    /// <exception cref="Exception">createFunc 또는 onGet에서 예외가 발생할 수 있습니다.</exception>
     public T Get()
     {
         T el;
@@ -77,15 +82,22 @@ public class ObjectPool<T> where T : class
         return el;
     }
 
-        /// <summary>
-        /// 객체 반환을 시도합니다. 실패 사유는 반환값으로 알 수 있습니다.
-        /// </summary>
-        /// <param name="element">반환할 객체</param>
-        /// <returns>성공 여부</returns>
-
+    /// <summary>
+    /// 객체 반환을 시도합니다. 실패 사유는 반환값으로 알 수 있습니다.
+    /// </summary>
+    /// <param name="element">반환할 객체</param>
+    /// <returns>성공 여부</returns>
     public void Release(T element)
     {
-    
+        if (collectionCheck && CountInactive != 0)
+        {
+            foreach (T el in elements)
+            {
+                if (el == element)
+                    throw new InvalidOperationException($"[ObjectPool] Duplicate release attempt: The object ({element}) is already in the pool and cannot be released again.");
+            }
+        }
+
         onRelease?.Invoke(element);
 
         if (CountInactive < maxSize)
@@ -94,15 +106,13 @@ public class ObjectPool<T> where T : class
         }
 
         CountAll--;
-
-        if (onDestroy is not null)
-            onDestroy(element);
+        onDestroy?.Invoke(element);
     }
 
-        /// <summary>
-        /// 풀에 남은 모든 객체를 정리하고 비웁니다.
-        /// </summary>
-        /// <remarks>onDestroy 콜백 또는 IDisposable.Dispose()가 호출됩니다.</remarks>
+    /// <summary>
+    /// 풀에 남은 모든 객체를 정리하고 비웁니다.
+    /// </summary>
+    /// <remarks>onDestroy 콜백 또는 IDisposable.Dispose()가 호출됩니다.</remarks>
     public void Clear()
     {
         if (onDestroy is not null)
@@ -110,26 +120,26 @@ public class ObjectPool<T> where T : class
             foreach (T el in elements)
                 onDestroy.Invoke(el);
         }
-    
+
         CountAll = 0;
         elements.Clear();
     }
 
-        /// <summary>
-        /// 해당 객체가 현재 풀에 포함되어 있는지 확인합니다.
-        /// </summary>
-        /// <param name="element">확인할 객체</param>
-        /// <returns>포함 여부</returns>
+    /// <summary>
+    /// 해당 객체가 현재 풀에 포함되어 있는지 확인합니다.
+    /// </summary>
+    /// <param name="element">확인할 객체</param>
+    /// <returns>포함 여부</returns>
     public bool HasElement(T element)
     {
         return elements.Contains(element);
     }
 
-        /// <summary>
-        /// 풀의 모든 객체를 정리합니다. (IDisposable 구현 시 Dispose 패턴 지원)
-        /// </summary>
+    /// <summary>
+    /// 풀의 모든 객체를 정리합니다. (IDisposable 구현 시 Dispose 패턴 지원)
+    /// </summary>
     public void Dispose()
     {
         Clear();
-    }    
+    }
 }
