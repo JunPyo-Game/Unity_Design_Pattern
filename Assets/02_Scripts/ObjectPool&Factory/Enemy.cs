@@ -7,12 +7,13 @@ public class Enemy : MonoBehaviour, IProduct, IPool<Enemy>
     private Vector3 dir;
 
     public ObjectPool<Enemy> Pool { get; set; }
+    public bool IsReleased { get; set; }
     public string Name { get => gameObject.name; set => gameObject.name = value; }
 
     public void Init()
     {
         if (player == null)
-            player = GameObject.FindGameObjectWithTag("Player").transform; 
+            player = GameObject.FindGameObjectWithTag("Player").transform;
 
         float rand = Random.Range(0.0f, 10.0f);
 
@@ -33,10 +34,13 @@ public class Enemy : MonoBehaviour, IProduct, IPool<Enemy>
 
     private void OnCollisionEnter(Collision other)
     {
+        if (IsReleased)
+            return;
+
         if (other.gameObject.CompareTag("Wall") ||
-            other.gameObject.CompareTag("Bullet"))
+                other.gameObject.CompareTag("Bullet"))
         {
-            Pool.Release(this);
+            Pool.TryRelease(this);
         }
     }
 }
