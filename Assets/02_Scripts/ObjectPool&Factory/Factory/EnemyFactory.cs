@@ -5,7 +5,14 @@ using UnityEngine;
 /// Enemy 객체를 생성하고 풀링하는 팩토리 ScriptableObject입니다.
 /// </summary>
 [CreateAssetMenu(fileName = "EnemyFactory", menuName = "EnemyFactory", order = 0)]
-public class EnemyFactory : Factory<Enemy>
+public class EnemyFactory : PooledFactory<Enemy>
 {
-    
+
 }
+
+
+// [CreateAssetMenu(fileName = "EnemyFactory", menuName = "EnemyFactory", order = 0)]
+// public class EnemyFactory : Factory<Enemy>
+// {
+
+// }
