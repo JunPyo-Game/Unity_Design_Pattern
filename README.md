@@ -817,6 +817,49 @@ public void Release(T element)
 }
 ```
 
+마지막으로 해당 풀에서 생성하지 않은 객체를 반환하는 것을 막고자 한다. 
+이를 위해서 풀에서 관리되는 객체임을 나타내기 위한 인터페이스를 정의했다.
+또한, `ObjectPool<T>`의 제약 조건도 추가했다.
+
+```csharp
+public interface IPool<T> where T : class, IPool<T>
+{
+    public ObjectPool<T> Pool { get; set; }
+}
+
+public class ObjectPool<T> where T : class, IPool<T>
+{
+    ...
+}
+```
+
+이제 객체를 생성할 때, 객체에 풀을 등록할 수 있다.
+그리고 객체를 반환할 때, 등록된 풀과 객체를 반환하려는 풀이 동일한지 확인하면 된다.
+
+```csharp
+public T Get()
+{
+    T el;
+
+    if (CountInactive == 0)
+    {
+        el = createFunc();
+        el.Pool = this;  // 풀 등록
+        CountAll++;
+    }
+    ...
+}
+
+public void Release(T element)
+{
+    if (element.Pool != this)
+        throw new InvalidOperationException($"[ObjectPool] Invalid release attempt: The object ({element}) does not belong to this pool.");
+
+    ...
+}
+```
+
+
 ### 할당/해제/파괴 시 액션
 
 지금까지 구현한 부분으로도 오브젝트 풀은 동작한다.
