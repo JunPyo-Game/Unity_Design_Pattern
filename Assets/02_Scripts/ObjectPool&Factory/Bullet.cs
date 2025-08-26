@@ -2,8 +2,6 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour, IProduct, IPool<Bullet>
 {
-    int enemyCount = 0;
-    int wallCount = 0;
     [SerializeField] private float moveSpeed = 8.0f;
     public ObjectPool<Bullet> Pool { get; set; }
     public bool IsReleased { get; set; } = false;

@@ -1,14 +1,13 @@
 using UnityEngine;
 
-public abstract class Factory<T> : ScriptableObject, IFactory where T : MonoBehaviour, IProduct
+public enum FactoryType
 {
-    [SerializeField] protected T prefab;
+    Bullet,
+    Enemy
+}
 
-    public IProduct GetProduct(Vector3 position)
-    {
-        IProduct product = Instantiate(prefab, position, Quaternion.identity);
-        product.Init();
-
-        return product;
-    }
+public abstract class Factory : ScriptableObject
+{
+    public abstract IProduct GetProduct(Vector3 position);
+    public abstract FactoryType Type { get; }
 }

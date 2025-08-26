@@ -2,8 +2,13 @@ using UnityEngine;
 
 public class Fire : MonoBehaviour
 {
-    [SerializeField] BulletFactory bulletFactory;
+    BulletFactory bulletFactory;
     [SerializeField] Transform firePos;
+
+    private void Start()
+    {
+        bulletFactory = FactoryManager.Instance[FactoryType.Bullet] as BulletFactory;
+    }
 
     private void Update()
     {

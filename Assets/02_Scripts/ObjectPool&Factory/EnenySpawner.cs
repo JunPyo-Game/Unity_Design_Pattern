@@ -4,11 +4,12 @@ using UnityEngine;
 public class EnenySpawner : MonoBehaviour
 {
     [SerializeField] private Transform[] spawnPoints;
-    [SerializeField] private EnemyFactory enemyFactory;
     [SerializeField] private float spawnInterval = 1.0f;
+    private EnemyFactory enemyFactory;
 
     private void Start()
     {
+        enemyFactory = FactoryManager.Instance[FactoryType.Enemy] as EnemyFactory;
         StartCoroutine(SpawnEnemy());
     }
 

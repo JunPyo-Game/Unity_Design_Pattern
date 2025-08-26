@@ -1,4 +1,3 @@
-
 using UnityEngine;
 
 /// <summary>
@@ -7,12 +6,5 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "EnemyFactory", menuName = "EnemyFactory", order = 0)]
 public class EnemyFactory : PooledFactory<Enemy>
 {
-
+    public override FactoryType Type => FactoryType.Enemy;
 }
-
-
-// [CreateAssetMenu(fileName = "EnemyFactory", menuName = "EnemyFactory", order = 0)]
-// public class EnemyFactory : Factory<Enemy>
-// {
-
-// }

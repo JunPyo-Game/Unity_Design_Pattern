@@ -6,7 +6,7 @@ using UnityEngine;
 /// </summary>
 /// <typeparam name="T">생성 및 풀링할 객체 타입(MonoBehaviour, IPool<T>, IProduct 구현 필요)</typeparam>
 public abstract class PooledFactory<T> 
-    : ScriptableObject, IFactory where T : MonoBehaviour, IPool<T>, IProduct
+    : Factory where T : MonoBehaviour, IProduct, IPool<T>
 {
     /// <summary>
     /// 생성에 사용할 프리팹(에디터에서 할당)
@@ -23,7 +23,7 @@ public abstract class PooledFactory<T>
     /// </summary>
     /// <param name="position">생성 위치</param>
     /// <returns>생성된 객체(IProduct)</returns>
-    public virtual IProduct GetProduct(Vector3 position)
+    public override IProduct GetProduct(Vector3 position)
     {
         // 풀 미생성 시 초기화
         pool ??= new(

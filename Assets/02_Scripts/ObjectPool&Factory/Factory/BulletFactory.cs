@@ -1,4 +1,3 @@
-
 using UnityEngine;
 
 /// <summary>
@@ -7,11 +6,5 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "BulletFactory", menuName = "BulletFactory", order = 0)]
 public class BulletFactory : PooledFactory<Bullet>
 {
-
+    public override FactoryType Type => FactoryType.Bullet;
 }
-
-// [CreateAssetMenu(fileName = "BulletFactory", menuName = "BulletFactory", order = 0)]
-// public class BulletFactory : Factory<Bullet>
-// {
-
-// }
