@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 
 /// <summary>
-/// 제네릭 오브젝트 풀 클래스.
-/// 객체의 재사용을 통해 생성/파괴 비용을 줄이고, 중복 반환 방지 및 안전한 풀링을 지원합니다.
+/// 제네릭 오브젝트 풀(ObjectPool) 클래스.
+/// 객체의 재사용을 통해 생성/파기 비용을 줄이고,
+/// 중복 반환 방지 및 안전한 풀링을 지원합니다.
 /// IPool<T> 인터페이스를 구현한 타입만 사용할 수 있습니다.
 /// </summary>
 public class ObjectPool<T> where T : class, IPool<T>
