@@ -119,6 +119,53 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &88979607
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 88979609}
+  - component: {fileID: 88979608}
+  m_Layer: 0
+  m_Name: FactoryManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &88979608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 88979607}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 170d6a8e52b226e4db07f0a204777e40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  factorys:
+  - {fileID: 11400000, guid: f8c10d4e86b09904bae15f1e28ad5c76, type: 2}
+  - {fileID: 11400000, guid: bddf547443a1667429fe135d55441cd4, type: 2}
+--- !u!4 &88979609
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 88979607}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &168575343
 GameObject:
   m_ObjectHideFlags: 0
@@ -760,7 +807,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffa4adb9454054b4e91d0649eba7b4b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletFactory: {fileID: 11400000, guid: f8c10d4e86b09904bae15f1e28ad5c76, type: 2}
   firePos: {fileID: 1508909931}
 --- !u!1 &761263117
 GameObject:
@@ -1157,7 +1203,6 @@ MonoBehaviour:
   - {fileID: 351505115}
   - {fileID: 914082321}
   - {fileID: 2045697958}
-  enemyFactory: {fileID: 11400000, guid: bddf547443a1667429fe135d55441cd4, type: 2}
   spawnInterval: 0.5
 --- !u!1 &2045697957
 GameObject:
@@ -1202,3 +1247,4 @@ SceneRoots:
   - {fileID: 796610732}
   - {fileID: 668384214}
   - {fileID: 1566648821}
+  - {fileID: 88979609}
