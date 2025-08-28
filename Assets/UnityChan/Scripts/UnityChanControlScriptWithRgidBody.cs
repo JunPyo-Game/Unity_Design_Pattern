@@ -45,7 +45,7 @@ namespace UnityChan
 		private GameObject cameraObject;	// メインカメラへの参照
 		
 		// アニメーター各ステートへの参照
-		static int idleState = Animator.StringToHash ("Base Layer.Idle");
+		static readonly int idleState = Animator.StringToHash ("Base Layer.Idle");
 		static int locoState = Animator.StringToHash ("Base Layer.Locomotion");
 		static int jumpState = Animator.StringToHash ("Base Layer.Jump");
 		static int restState = Animator.StringToHash ("Base Layer.Rest");
