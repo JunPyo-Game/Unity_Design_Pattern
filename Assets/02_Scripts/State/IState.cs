@@ -18,16 +18,15 @@ using UnityEngine;
 
 public enum StateType
 {
-    Wait,
+    Idle,
     Move,
-    JumpStart,
-    JumpAir,
-    JumpLand
-
+    Jump
 }
 
 public interface IState
 {
     public StateType Type { get; }
+    public void Enter();
     public void Update();
+    public void Exit();
 }
