@@ -16,17 +16,20 @@ using UnityEngine;
     어차피 객체마다 필요한 상태가 다르고 상태마다 필요한 동작이 다르다
 */
 
-public enum StateType
+namespace State
 {
-    Idle,
-    Move,
-    Jump
-}
+    public enum StateType
+    {
+        Idle,
+        Move,
+        Jump
+    }
 
-public interface IState
-{
-    public StateType Type { get; }
-    public void Enter();
-    public void Update();
-    public void Exit();
+    public interface IState
+    {
+        public StateType Type { get; }
+        public void Enter();
+        public void Update();
+        public void Exit();
+    }
 }
