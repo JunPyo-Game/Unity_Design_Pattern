@@ -1,58 +1,67 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine.Events;
 
-[Serializable]
-public class StateMachine
+namespace State
 {
-    private readonly Dictionary<StateType, IState> stateList = new();
-    private IState current;
-
-    public StateMachine() { }
-
-    public StateMachine(IEnumerable<IState> states)
+    public class StateMachine
     {
-        foreach (IState state in states)
+        public UnityEvent<IState> OnChangeState = new();
+        private readonly Dictionary<StateType, IState> stateList = new();
+        private IState current;
+
+        public StateMachine() { }
+
+        public StateMachine(IEnumerable<IState> states)
         {
-            stateList[state.Type] = state;
+            foreach (IState state in states)
+            {
+                stateList[state.Type] = state;
+            }
         }
-    }
 
-    public StateMachine(IEnumerable<IState> states, StateType initState)
-        : this(states)
-    {
-        Init(initState);
-    }
+        public StateMachine(IEnumerable<IState> states, StateType initState)
+            : this(states)
+        {
+            Init(initState);
+        }
 
-    public void Init(StateType initState)
-    {
-        current = stateList[initState];
-    }
+        public void Init(StateType initState)
+        {
+            current = stateList[initState];
+            OnChangeState?.Invoke(current);
+            current.Enter();
+        }
 
-    public bool TransitionTo(StateType type)
-    {
-        bool result = stateList.TryGetValue(type, out current);
+        public bool TransitionTo(StateType type)
+        {
+            current.Exit();
+            bool result = stateList.TryGetValue(type, out current);
+            OnChangeState?.Invoke(current);
+            current.Enter();
 
-        return result;
-    }
+            return result;
+        }
 
-    public void Update()
-    {
-        current?.Update();
-    }
+        public void Update()
+        {
+            current?.Update();
+        }
 
-    public bool AddState(IState state)
-    {
-        return stateList.TryAdd(state.Type, state);
-    }
+        public bool AddState(IState state)
+        {
+            return stateList.TryAdd(state.Type, state);
+        }
 
-    public bool RemoveState(StateType type)
-    {
-        return stateList.Remove(type);
-    }
+        public bool RemoveState(StateType type)
+        {
+            return stateList.Remove(type);
+        }
 
-    public void ClearState()
-    {
-        stateList.Clear();
+        public void ClearState()
+        {
+            stateList.Clear();
+        }
+
     }
-    
 }

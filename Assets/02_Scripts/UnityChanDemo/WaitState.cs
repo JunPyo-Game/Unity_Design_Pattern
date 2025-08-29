@@ -1,5 +1,7 @@
 using UnityEngine;
 
+namespace UnityChanDemo
+{
 public class WaitState : StateMachineBehaviour
 {
     private UnityChanMove unityChanMove;
@@ -29,4 +31,5 @@ public class WaitState : StateMachineBehaviour
         if (UnityChanInput.GetToggleRunModeKey())
             unityChanMove.ToggleRun();
     }
+}
 }

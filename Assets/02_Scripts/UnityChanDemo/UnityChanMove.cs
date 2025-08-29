@@ -1,7 +1,9 @@
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+
+namespace UnityChanDemo
+{
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(CapsuleCollider))]
@@ -19,7 +21,6 @@ public class UnityChanMove : MonoBehaviour
     private readonly Vector3 umatobiColCenter = new(0.0f, 1.2f, 0.0f);
     private readonly float umatobiColHeight = 1.0f;
 
-    [SerializeField] private StateMachine stateMachine;
     [SerializeField] private float walkSpeed = 1.0f;
     [SerializeField] private float runSpeed = 5.0f;
     [SerializeField] private float rotateSpeed = 120.0f;
@@ -145,4 +146,5 @@ public class UnityChanMove : MonoBehaviour
     {
         umatobiTarget = null;
     }
+}
 }

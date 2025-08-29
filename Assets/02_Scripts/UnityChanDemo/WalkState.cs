@@ -1,37 +1,40 @@
 using UnityEngine;
 
-public class WalkState : StateMachineBehaviour
+namespace UnityChanDemo
 {
-    private UnityChanMove unityChanMove;
-    private float moveSpeed;
-    private float rotateSpeed;
-
-    override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    public class WalkState : StateMachineBehaviour
     {
-        if (unityChanMove == null)
-            unityChanMove = animator.gameObject.GetComponent<UnityChanMove>();
+        private UnityChanMove unityChanMove;
+        private float moveSpeed;
+        private float rotateSpeed;
 
-        moveSpeed = unityChanMove.WalkSpeed;
-        rotateSpeed = unityChanMove.RotateSpeed;
-    }
-
-    override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    {
-        unityChanMove.CheckGround();
-
-        unityChanMove.Move(UnityChanInput.GetVertical(), moveSpeed);
-        unityChanMove.Rotate(UnityChanInput.GetHorizontal(), rotateSpeed);
-
-        if (unityChanMove.IsGround)
+        override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            if (UnityChanInput.GetJumpKey())
-                unityChanMove.Jump();
+            if (unityChanMove == null)
+                unityChanMove = animator.gameObject.GetComponent<UnityChanMove>();
 
-            if (UnityChanInput.GetUmatobiKey())
-                unityChanMove.Umatobi();
+            moveSpeed = unityChanMove.WalkSpeed;
+            rotateSpeed = unityChanMove.RotateSpeed;
         }
 
-        if (UnityChanInput.GetToggleRunModeKey())
-            unityChanMove.SwitchToRun();
+        override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+        {
+            unityChanMove.CheckGround();
+
+            unityChanMove.Move(UnityChanInput.GetVertical(), moveSpeed);
+            unityChanMove.Rotate(UnityChanInput.GetHorizontal(), rotateSpeed);
+
+            if (unityChanMove.IsGround)
+            {
+                if (UnityChanInput.GetJumpKey())
+                    unityChanMove.Jump();
+
+                if (UnityChanInput.GetUmatobiKey())
+                    unityChanMove.Umatobi();
+            }
+
+            if (UnityChanInput.GetToggleRunModeKey())
+                unityChanMove.SwitchToRun();
+        }
     }
 }

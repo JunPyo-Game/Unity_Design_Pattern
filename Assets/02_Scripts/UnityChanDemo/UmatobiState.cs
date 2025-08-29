@@ -1,52 +1,52 @@
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
-// 0.25 Jump
-// 0.4 -0.7 Move
-public class UmatobiState : StateMachineBehaviour
+namespace UnityChanDemo
 {
-    private UnityChanMove unityChanMove;
-    private float moveSpeed;
-    private float targetHeight;
-    private float targetWidth;
-    private bool isJump;
-    private bool isLand;
-
-    override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    public class UmatobiState : StateMachineBehaviour
     {
-        if (unityChanMove == null)
-            unityChanMove = animator.gameObject.GetComponent<UnityChanMove>();
+        private UnityChanMove unityChanMove;
+        private float moveSpeed;
+        private float targetHeight;
+        private float targetWidth;
+        private bool isJump;
+        private bool isLand;
 
-        moveSpeed = unityChanMove.RunSpeed;
-        targetHeight = unityChanMove.UmatobiTarget.localScale.y;
-        targetWidth = unityChanMove.UmatobiTarget.localScale.z;
-        isJump = false;
-        isLand = false;
-    }
-
-    override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    {
-        float progress = stateInfo.normalizedTime;
-
-        if (!isJump && progress > 0.25f)
+        override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            float force = targetHeight * 3.5f;
-            unityChanMove.Rigidbody.AddForce(Vector3.up * force, ForceMode.Impulse);
-            unityChanMove.SetUmatobiCollider();
-            isJump = true;
+            if (unityChanMove == null)
+                unityChanMove = animator.gameObject.GetComponent<UnityChanMove>();
+
+            moveSpeed = unityChanMove.RunSpeed;
+            targetHeight = unityChanMove.UmatobiTarget.localScale.y;
+            targetWidth = unityChanMove.UmatobiTarget.localScale.z;
+            isJump = false;
+            isLand = false;
         }
 
-        if (progress > 0.4f && progress < 0.7f)
+        override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            unityChanMove.Move(1, 3.5f * targetWidth);
-        }
+            float progress = stateInfo.normalizedTime;
 
-        if (progress >= 0.7f)
-        {
-            if (!isLand)
+            if (!isJump && progress > 0.25f)
             {
-                unityChanMove.ResetCollider();
-                isLand = true;
+                float force = targetHeight * 3.5f;
+                unityChanMove.Rigidbody.AddForce(Vector3.up * force, ForceMode.Impulse);
+                unityChanMove.SetUmatobiCollider();
+                isJump = true;
+            }
+
+            if (progress > 0.4f && progress < 0.7f)
+            {
+                unityChanMove.Move(1, 3.5f * targetWidth);
+            }
+
+            if (progress >= 0.7f)
+            {
+                if (!isLand)
+                {
+                    unityChanMove.ResetCollider();
+                    isLand = true;
+                }
             }
         }
     }

@@ -1,13 +1,16 @@
-using UnityEngine;
-
-public class FollowCam : MonoBehaviour
+namespace UnityChanDemo
 {
-    [SerializeField] private Transform target;
-    [SerializeField] private Vector3 offset = new(0, 3, -4);
+    using UnityEngine;
 
-    private void LateUpdate()
+    public class FollowCam : MonoBehaviour
     {
-        transform.position = target.position + target.rotation * offset;
-        transform.LookAt(target.position);
+        [SerializeField] private Transform target;
+        [SerializeField] private Vector3 offset = new(0, 3, -4);
+
+        private void LateUpdate()
+        {
+            transform.position = target.position + target.rotation * offset;
+            transform.LookAt(target.position);
+        }
     }
 }
