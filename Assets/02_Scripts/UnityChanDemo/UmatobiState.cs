@@ -4,7 +4,7 @@ namespace UnityChanDemo
 {
     public class UmatobiState : StateMachineBehaviour
     {
-        private UnityChanMove unityChanMove;
+        private UnityChanController unityChanMove;
         private float moveSpeed;
         private float targetHeight;
         private float targetWidth;
@@ -14,7 +14,7 @@ namespace UnityChanDemo
         override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
             if (unityChanMove == null)
-                unityChanMove = animator.gameObject.GetComponent<UnityChanMove>();
+                unityChanMove = animator.gameObject.GetComponent<UnityChanController>();
 
             moveSpeed = unityChanMove.RunSpeed;
             targetHeight = unityChanMove.UmatobiTarget.localScale.y;

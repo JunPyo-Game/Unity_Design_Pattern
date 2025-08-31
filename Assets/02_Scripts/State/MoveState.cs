@@ -26,7 +26,10 @@ namespace State
         public void Update()
         {
             if (playerController.Velocity == 0)
+            {
                 playerController.StateMachine.TransitionTo(StateType.Idle);
+                    
+                }
 
             if (!playerController.IsGround)
                 playerController.StateMachine.TransitionTo(StateType.Jump);

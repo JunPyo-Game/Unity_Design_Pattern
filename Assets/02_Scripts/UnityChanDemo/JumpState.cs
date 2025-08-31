@@ -5,18 +5,18 @@ namespace UnityChanDemo
 {
     public class JumpState : StateMachineBehaviour
     {
-        private UnityChanMove unityChanMove;
+        private UnityChanController unityChanController;
         private bool isJump = false;
         private bool isLand = true;
         private float moveSpeed;
 
         override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            if (unityChanMove == null)
-                unityChanMove = animator.gameObject.GetComponent<UnityChanMove>();
+            if (unityChanController == null)
+                unityChanController = animator.gameObject.GetComponent<UnityChanController>();
 
-            bool isRun = animator.GetBool(UnityChanMove.HashIsRun);
-            moveSpeed = isRun ? unityChanMove.RunSpeed : unityChanMove.WalkSpeed;
+            bool isRun = animator.GetBool(UnityChanController.HashIsRun);
+            moveSpeed = isRun ? unityChanController.RunSpeed : unityChanController.WalkSpeed;
 
             isJump = false;
         }
@@ -27,20 +27,20 @@ namespace UnityChanDemo
 
             if (!isJump && progress >= 0.18f)
             {
-                unityChanMove.JumpImpulse();
+                unityChanController.JumpImpulse();
                 isJump = true;
                 isLand = false;
             }
 
             else if (progress > 0.18f && progress <= 0.6f)
             {
-                unityChanMove.Move(UnityChanInput.GetVertical(), moveSpeed);
-                unityChanMove.UpdateCollider();
+                unityChanController.Move(UnityChanInput.GetVertical(), moveSpeed);
+                unityChanController.UpdateCollider();
             }
 
             else if (!isLand && progress > 0.6f)
             {
-                unityChanMove.ResetCollider();
+                unityChanController.ResetCollider();
                 isLand = true;
             }
         }

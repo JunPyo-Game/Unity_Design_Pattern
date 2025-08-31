@@ -7,7 +7,7 @@ namespace UnityChanDemo
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(CapsuleCollider))]
-public class UnityChanMove : MonoBehaviour
+public class UnityChanController : MonoBehaviour
 {
     static public readonly int HashVertical = Animator.StringToHash("Vertical");
     static public readonly int HashHorizontal = Animator.StringToHash("Horizontal");

@@ -4,37 +4,37 @@ namespace UnityChanDemo
 {
     public class WalkState : StateMachineBehaviour
     {
-        private UnityChanMove unityChanMove;
+        private UnityChanController unityChanController;
         private float moveSpeed;
         private float rotateSpeed;
 
         override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            if (unityChanMove == null)
-                unityChanMove = animator.gameObject.GetComponent<UnityChanMove>();
+            if (unityChanController == null)
+                unityChanController = animator.gameObject.GetComponent<UnityChanController>();
 
-            moveSpeed = unityChanMove.WalkSpeed;
-            rotateSpeed = unityChanMove.RotateSpeed;
+            moveSpeed = unityChanController.WalkSpeed;
+            rotateSpeed = unityChanController.RotateSpeed;
         }
 
         override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            unityChanMove.CheckGround();
+            unityChanController.CheckGround();
 
-            unityChanMove.Move(UnityChanInput.GetVertical(), moveSpeed);
-            unityChanMove.Rotate(UnityChanInput.GetHorizontal(), rotateSpeed);
+            unityChanController.Move(UnityChanInput.GetVertical(), moveSpeed);
+            unityChanController.Rotate(UnityChanInput.GetHorizontal(), rotateSpeed);
 
-            if (unityChanMove.IsGround)
+            if (unityChanController.IsGround)
             {
                 if (UnityChanInput.GetJumpKey())
-                    unityChanMove.Jump();
+                    unityChanController.Jump();
 
                 if (UnityChanInput.GetUmatobiKey())
-                    unityChanMove.Umatobi();
+                    unityChanController.Umatobi();
             }
 
             if (UnityChanInput.GetToggleRunModeKey())
-                unityChanMove.SwitchToRun();
+                unityChanController.SwitchToRun();
         }
     }
 }

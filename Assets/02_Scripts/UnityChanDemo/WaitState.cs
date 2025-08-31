@@ -4,32 +4,32 @@ namespace UnityChanDemo
 {
 public class WaitState : StateMachineBehaviour
 {
-    private UnityChanMove unityChanMove;
+    private UnityChanController unityChanController;
     private float moveSpeed;
     private float rotateSpeed;
 
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if (unityChanMove == null)
-            unityChanMove = animator.gameObject.GetComponent<UnityChanMove>();
+        if (unityChanController == null)
+            unityChanController = animator.gameObject.GetComponent<UnityChanController>();
 
-        bool isRun = animator.GetBool(UnityChanMove.HashIsRun);
-        moveSpeed = isRun ? unityChanMove.RunSpeed : unityChanMove.WalkSpeed;
-        rotateSpeed = unityChanMove.RotateSpeed;
+        bool isRun = animator.GetBool(UnityChanController.HashIsRun);
+        moveSpeed = isRun ? unityChanController.RunSpeed : unityChanController.WalkSpeed;
+        rotateSpeed = unityChanController.RotateSpeed;
     }
 
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        unityChanMove.CheckGround();
+        unityChanController.CheckGround();
 
-        unityChanMove.Move(UnityChanInput.GetVertical(), moveSpeed);
-        unityChanMove.Rotate(UnityChanInput.GetHorizontal(), rotateSpeed);
+        unityChanController.Move(UnityChanInput.GetVertical(), moveSpeed);
+        unityChanController.Rotate(UnityChanInput.GetHorizontal(), rotateSpeed);
 
-        if (unityChanMove.IsGround && UnityChanInput.GetJumpKey())
-            unityChanMove.Jump();
+        if (unityChanController.IsGround && UnityChanInput.GetJumpKey())
+            unityChanController.Jump();
 
         if (UnityChanInput.GetToggleRunModeKey())
-            unityChanMove.ToggleRun();
+            unityChanController.ToggleRun();
     }
 }
 }
