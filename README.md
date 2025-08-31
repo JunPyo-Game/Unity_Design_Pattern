@@ -45,3 +45,8 @@ SOLID, 싱글톤, 커맨드, 오브젝트 풀, 팩토리 등 주요 패턴을 �
 - 구현된 상태 패턴을 활용한 간단한 데모 소개
 - 캐릭터 애니메이션에 구현된 상태 패턴 적용
 - StateMachineBehaviour를 활용한 캐릭터 애니메이션 상태 패턴 적용
+
+### [옵저버 패턴](https://velog.io/@seojunpyo/Unity-%EB%94%94%EC%9E%90%EC%9D%B8-%ED%8C%A8%ED%84%B4-%EC%98%B5%EC%A0%80%EB%B2%84-%ED%8C%A8%ED%84%B4)
+- 옵저버 패턴의 개념 정리
+- Event를 활용한 옵저버 패턴 구현
+- EventManager를 활용하여 구독/구독 해제 및 이벤트 호출 개선
