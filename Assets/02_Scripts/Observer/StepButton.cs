@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 enum ButtonColor
 {
     Red,
@@ -10,11 +11,7 @@ public class StepButton : MonoBehaviour, IButtonInteractable
 {
     [SerializeField] private float pressDepth = 1.0f;
     [SerializeField] private float pressSpeed = 2.0f;
-    [SerializeField] private bool autoRelease = true;
     [SerializeField] private ButtonColor color;
-
-    // public UnityEvent PresseButtonEvent = new();
-    // public UnityEvent ReleaseButtonEvent = new();
 
     private float curDepth = 0.0f;
 
