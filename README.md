@@ -8,32 +8,40 @@ SOLID, 싱글톤, 커맨드, 오브젝트 풀, 팩토리 등 주요 패턴을 �
 
 <br>
 
-## Unity 디자인 패턴 참고 링크 및 요약
+## Unity 디자인 패턴
 
 ### [SOLID 원칙](https://velog.io/@seojunpyo/Unity-%EB%94%94%EC%9E%90%EC%9D%B8-%ED%8C%A8%ED%84%B4-SOLID-%EC%9B%90%EC%B9%99)
-- 각 원칙의 개념과 Unity 프로젝트에서 적용할 때 주의할 점, 컴포넌트 분리, 추상화, 인터페이스 활용의 필요성을 이해하는 데 중점을 두었습니다.
-	
-<br>
+- 단일 책임 원칙, 개방 폐쇄 원칙, 리스코프 치환, 인터페이스 분리, 종속성 역전에 대해서 정리.
 
 ### [싱글톤 패턴](https://velog.io/@seojunpyo/Unity-%EB%94%94%EC%9E%90%EC%9D%B8-%ED%8C%A8%ED%84%B4-%EC%8B%B1%EA%B8%80%ED%86%A4)
-- 인스턴스가 하나만 존재해야 할 때, Unity에서 싱글톤을 어떻게 구현하고 활용하는지 직접 만들어봤습니다.
-- MonoBehaviour/ScriptableObject 기반, 제네릭 싱글톤 등 여러 방식의 장단점을 비교하며, 언제 싱글톤을 쓰는 게 좋은지 고민해볼 수 있었습니다.
-
-<br>
+- 싱글톤 패턴의 개념 정리
+- 유니티에서 전역 접근과 유일성을 보장을 구현
+- 재사용할 수 있도록 제네릭 타입으로 개선
 
 ### [커맨드 패턴](https://velog.io/@seojunpyo/Unity-%EB%94%94%EC%9E%90%EC%9D%B8-%ED%8C%A8%ED%84%B4-%EC%BB%A4%EB%A7%A8%EB%93%9C-%ED%8C%A8%ED%84%B4)
-- 명령을 객체로 만들어 실행/취소/재실행/리플레이 등 다양한 기능을 직접 구현해봤습니다.
-- Invoker, ICommand, Command Object, Receiver, Client 등 각 역할을 나눠보며, 구조가 어떻게 확장되는지 경험할 수 있었습니다.
-- Undo/Redo/Replay 등 실제 게임에서 필요한 기능을 내 코드로 만들어보니, 커맨드 패턴의 진짜 장점을 체감할 수 있었습니다.
+- 커맨드 패턴의 개념 정리
+- 커맨드 패턴 구현을 위한 전체 구조 설명
+- 커맨드 패턴의 각 요소 (CommandInvoker, Command Object 등)에 대한 설명 및 구현
+- 실행 취소, 재실행, 리플레이 기능 구현 
 
- <br>
-   
 ### [오브젝트 풀 패턴](https://velog.io/@seojunpyo/Unity-%EB%94%94%EC%9E%90%EC%9D%B8-%ED%8C%A8%ED%84%B4-%EC%98%A4%EB%B8%8C%EC%A0%9D%ED%8A%B8-%ED%92%80-%ED%8C%A9%ED%86%A0%EB%A6%AC)
-- Stack, Func<T> 기반 풀 관리, 최대 개수 제한, 중복 반환 방지 등 실전에서 꼭 필요한 기능을 내 코드로 구현해봤습니다.
-- 실전에서 어떤 상황에 오브젝트 풀이 필요한지, 직접 써보며 명확히 알 수 있었습니다.
+- 오브젝트 풀 패턴의 개념 정리
+- 객체 관리, 할당, 해제를 구현 
+- 델리게이트를 활용하여 객체 생성, 할당, 해체, 파괴 시 사용자가 정의한 메서드를 호출할 수 있는 기능 구현
 
-<br>
 
 ### [팩토리 패턴](https://velog.io/@seojunpyo/Unity-%EB%94%94%EC%9E%90%EC%9D%B8-%ED%8C%A8%ED%84%B4-%ED%8C%A9%ED%86%A0%EB%A6%AC-%ED%8C%A8%ED%84%B4-043pq0e6)
-- 객체 생성 책임을 팩토리로 분리하고, 실제로 팩토리 패턴을 적용해보며 결합도가 얼마나 줄어드는지 경험했습니다.
-- IProduct, Factory, GenericFactory, FactoryManager 등 계층적 구조와 ScriptableObject 팩토리, 오브젝트 풀과의 결합 등 실전에서 바로 쓸 수 있는 구현법을 내 코드로 만들어봤습니다.
+- 팩토리 패턴의 개념 정리
+- 팩토리 패턴 구현을 위한 전체 구조 설명
+- 팩토리 패턴의 각 요소 (Factory, IProduct 등)에 대한 설명 및 구현
+- 팩토리 매니저를 통해 여러 팩토리를 관리하는 방법 제안
+- 오브젝트 풀과 결합하여 객체 생성을 효율적으로 개선하는 방법 제안 
+
+
+### [상태 패턴](https://velog.io/@seojunpyo/Unity-%EB%94%94%EC%9E%90%EC%9D%B8-%ED%8C%A8%ED%84%B4-%EC%83%81%ED%83%9C-%ED%8C%A8%ED%84%B4-vy77piep)
+- 상태 패턴의 개념 정리
+- 상태 패턴 구현을 위한 전체 구조 설명
+- 상태 패턴의 각 요소 (IState, StateMachine)에 대한 설명 및 구현
+- 구현된 상태 패턴을 활용한 간단한 데모 소개
+- 캐릭터 애니메이션에 구현된 상태 패턴 적용
+- StateMachineBehaviour를 활용한 캐릭터 애니메이션 상태 패턴 적용
