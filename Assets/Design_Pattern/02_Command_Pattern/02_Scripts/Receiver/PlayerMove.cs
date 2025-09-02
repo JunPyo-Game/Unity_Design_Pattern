@@ -3,6 +3,7 @@ using UnityEngine;
 public class PlayerMove : MonoBehaviour, IMove
 {
     [SerializeField] private LayerMask obstacleLayer;
+    [SerializeField] private GameObject arrowPrefab;
     private const float boardSpacing = 1.0f;
     private Vector3 oriPos;
 

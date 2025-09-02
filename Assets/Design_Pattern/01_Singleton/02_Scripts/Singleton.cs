@@ -26,11 +26,10 @@ public class Singleton<T> : MonoBehaviour where T : Component
 
     public virtual void Awake()
     {
-        Debug.Log("Create");
         if (instance == null)
         {
             instance = this as T;
-            DontDestroyOnLoad(gameObject);
+            DontDestroyOnLoad(this);
         }
         else
         {
