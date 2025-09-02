@@ -5,11 +5,13 @@ public class UnityChanIdle : StateMachineBehaviour
     static private readonly float MOTION_CHANGE_INTERVAL = 3.0f;
     private UnityChanController unityChan;
     private float deltaTime;
+    private bool isRootIdle;
 
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         unityChan = animator.GetComponent<UnityChanController>();
         deltaTime = 0.0f;
+        isRootIdle = animator.GetInteger(UnityChanHash.IdleType) == 0;
     }
 
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -20,7 +22,7 @@ public class UnityChanIdle : StateMachineBehaviour
             animator.SetFloat(UnityChanHash.Velocity, unityChan.Velocity);
 
         if (unityChan.CheckGround() && Input.GetKeyDown(KeyCode.Space))
-                animator.SetTrigger(UnityChanHash.Jump);
+            animator.SetTrigger(UnityChanHash.Jump);
 
         if (Input.GetKeyDown(KeyCode.LeftShift))
             unityChan.ToggleRun();

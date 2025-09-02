@@ -86,7 +86,7 @@ PrefabInstance:
     - target: {fileID: 9500000, guid: 8f0565f23a2b58541a475bd3c1393052, type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 9100000, guid: 3b77307430506c745bb0a8c03fcbf489, type: 2}
+      objectReference: {fileID: 9100000, guid: 0e2acc7961482884aa44421aeb8e749a, type: 2}
     - target: {fileID: 13700000, guid: 8f0565f23a2b58541a475bd3c1393052, type: 3}
       propertyPath: m_DirtyAABB
       value: 0
@@ -272,14 +272,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e7e12e445a5fe240a3a5d00c2d2b482, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementMode: 0
-  moveSpeed: 2
-  rotateSpeed: 120
+  walkSpeed: 2
+  runSpeed: 5
   jumpForce: 5
   playerCamera: {fileID: 0}
   offset: {x: 0, y: 2, z: -8}
   rotateSensitivity: 5
-  alwaysRotateCamera: 1
+  alwaysRotateCamera: 0
   useGroundCheck: 1
   groundCheckPoint: {fileID: 4418888999660673982}
   groundCheckLayer:
