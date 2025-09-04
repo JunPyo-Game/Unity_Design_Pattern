@@ -42,6 +42,7 @@ public class FactoryManager : Singleton<FactoryManager>
         base.Awake();
         foreach (var factory in factorys)
         {
+            Debug.Log(factory.Type);
             if (!factoryList.ContainsKey(factory.Type))
                 factoryList[factory.Type] = factory;
         }

@@ -6,9 +6,9 @@ using UnityEngine;
 /// </summary>
 public enum FactoryType
 {
-    Bullet,
+    Missile,
     Enemy,
-    Arrow
+    Explosion
 }
 
 /// <summary>

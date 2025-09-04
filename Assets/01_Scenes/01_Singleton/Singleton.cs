@@ -8,8 +8,10 @@ public class Singleton<T> : MonoBehaviour where T : Component
     {
         get
         {
+            Debug.Log("get");
             if (instance == null)
             {
+                Debug.Log("null");
                 instance = FindFirstObjectByType<T>();
 
                 if (instance == null)
@@ -28,6 +30,7 @@ public class Singleton<T> : MonoBehaviour where T : Component
     {
         if (instance == null)
         {
+            Debug.Log("create");
             instance = this as T;
             DontDestroyOnLoad(this);
         }
