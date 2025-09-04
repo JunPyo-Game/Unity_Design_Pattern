@@ -1,13 +1,14 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(CapsuleCollider))]
 public class UnityChanQuarterViewController : MonoBehaviour
 {
     [Header("Movement Setting")]
     [SerializeField] private float moveSpeed = 5.0f;
     [SerializeField] private float rotateSpeed = 360.0f;
     [SerializeField] private LayerMask groundLayer;
-    [SerializeField] private GameObject outline;
 
     [Header("Camera Setting")]
     [SerializeField] private Camera playerCamera;

@@ -1,20 +1,24 @@
 
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(CapsuleCollider))]
 public class UnityChanThirdViewController : MonoBehaviour
 {
     [Header("Movement Setting")]
     [SerializeField] private float walkSpeed = 2.0f;
     [SerializeField] private float runSpeed = 5.0f;
-    [SerializeField] private float jumpForce;
+    [SerializeField] private float jumpForce = 4.0f;
+    [SerializeField] private float slideBoost = 2.0f;
 
 
     [Header("Camera Settings")]
     [SerializeField] private Camera playerCamera;
     [SerializeField] private Vector3 offset;
     [SerializeField] private float rotateSensitivity;
+    [SerializeField] private float minPitch = -80.0f;
+    [SerializeField] private float maxPitch = 80.0f;
     [SerializeField] private bool alwaysRotateCamera;
 
 
@@ -61,7 +65,7 @@ public class UnityChanThirdViewController : MonoBehaviour
 
             yaw += mouseX;
             pitch -= mouseY;
-            pitch = Mathf.Clamp(pitch, -80.0f, 80.0f);
+            pitch = Mathf.Clamp(pitch, minPitch, maxPitch);
         }
 
         camTransform.position = transform.position + Quaternion.Euler(pitch, yaw, 0) * offset;
@@ -90,7 +94,7 @@ public class UnityChanThirdViewController : MonoBehaviour
         camRight.y = 0;
 
         // 이동 방향 (카메라 기준)
-        float speed = IsSliding ? moveSpeed * 2 : moveSpeed;
+        float speed = IsSliding ? moveSpeed * slideBoost : moveSpeed;
         Vector3 moveDir = (camForward.normalized * v + camRight.normalized * h).normalized;
 
         rb.MovePosition(transform.position + Time.fixedDeltaTime * speed * moveDir);
