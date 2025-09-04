@@ -7,7 +7,8 @@ using UnityEngine;
 public enum FactoryType
 {
     Bullet,
-    Enemy
+    Enemy,
+    Arrow
 }
 
 /// <summary>

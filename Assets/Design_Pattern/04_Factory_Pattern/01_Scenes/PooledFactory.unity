@@ -128,7 +128,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 88979609}
-  - component: {fileID: 88979608}
+  - component: {fileID: 88979610}
   m_Layer: 0
   m_Name: FactoryManager
   m_TagString: Untagged
@@ -136,21 +136,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &88979608
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 88979607}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 170d6a8e52b226e4db07f0a204777e40, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  factorys:
-  - {fileID: 11400000, guid: f8c10d4e86b09904bae15f1e28ad5c76, type: 2}
-  - {fileID: 11400000, guid: bddf547443a1667429fe135d55441cd4, type: 2}
 --- !u!4 &88979609
 Transform:
   m_ObjectHideFlags: 0
@@ -166,6 +151,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &88979610
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 88979607}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da852ce1ce39d804a90a7287a4737c49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  factorys:
+  - {fileID: 11400000, guid: 3fb7ade2b0f383c439d7a67ff865b8dc, type: 2}
+  - {fileID: 11400000, guid: d2e78e6abd3fa0e45bac52027e9fbb4e, type: 2}
 --- !u!1 &168575343
 GameObject:
   m_ObjectHideFlags: 0
@@ -1026,7 +1026,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1566648820}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e2db4cefe400d9447a155b34917481e1, type: 3}
+  m_Script: {fileID: 11500000, guid: 2cc091f5059ab7c4dacb30d74971e817, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   spawnPoints:
@@ -1035,7 +1035,7 @@ MonoBehaviour:
   - {fileID: 351505115}
   - {fileID: 914082321}
   - {fileID: 2045697958}
-  spawnInterval: 0.5
+  spawnInterval: 1
 --- !u!1 &2045697957
 GameObject:
   m_ObjectHideFlags: 0

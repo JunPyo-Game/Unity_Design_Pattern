@@ -3,7 +3,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(Animator))]
-public class UnityChanController : MonoBehaviour
+public class UnityChanThirdViewController : MonoBehaviour
 {
     [Header("Movement Setting")]
     [SerializeField] private float walkSpeed = 2.0f;

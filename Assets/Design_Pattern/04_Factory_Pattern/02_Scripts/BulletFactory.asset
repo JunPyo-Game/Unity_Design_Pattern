@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 952dac3f21d327c47add00a8333b9b97, type: 3}
+  m_Script: {fileID: 11500000, guid: 5155c76e940255a458a4c3e301ed77e8, type: 3}
   m_Name: BulletFactory
   m_EditorClassIdentifier: 
-  prefab: {fileID: 8990758196041132061, guid: 2a8607d63b7091840ba24f84db50e29c, type: 3}
+  prefab: {fileID: 0}

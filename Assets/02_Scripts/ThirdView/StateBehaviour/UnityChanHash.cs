@@ -1,6 +1,8 @@
 using UnityEngine;
 
-static public class UnityChanHash
+namespace UnityChanThirdView
+{
+    static public class UnityChanHash
 {
     static public int Velocity = Animator.StringToHash("Velocity");
     static public int Jump = Animator.StringToHash("Jump");
@@ -8,3 +10,5 @@ static public class UnityChanHash
     static public int JumpHeight = Animator.StringToHash("JumpHeight");
     static public int IdleType = Animator.StringToHash("IdleType");
 }
+}
+
