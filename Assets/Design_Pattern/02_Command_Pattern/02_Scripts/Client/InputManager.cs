@@ -43,7 +43,7 @@ public class InputManager : MonoBehaviour
 
     private void RunPlayerCommand(Vector3 movement)
     {
-        ICommand command = new MoveCommand(player, movement);
+        Command command = new MoveCommand(player, movement);
         CommandInvoker.Execute(command);
     }
 }

@@ -35,13 +35,13 @@ using UnityEngine;
 public class CommandInvoker : MonoBehaviour
 {
     // 실행된 명령들을 순서대로 저장하는 리스트
-    static private readonly List<ICommand> commandList = new();
+    static private readonly List<Command> commandList = new();
     // 현재 실행된 명령의 인덱스(Undo/Redo/Replay 시 기준이 됨)
     static private int currentIdx = 0;
 
-    static public IEnumerable<ICommand> CommandList => commandList;
+    static public IEnumerable<Command> CommandList => commandList;
 
-    static public void Execute(ICommand command)
+    static public void Execute(Command command)
     {
         // 전달받은 명령을 실행한다.
         command.Execute();
