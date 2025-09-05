@@ -3,21 +3,18 @@ using UnityEngine;
 public class TurretFire : MonoBehaviour
 {
     [SerializeField] private BulletController bulletPrefab;
-    [SerializeField] private BulletParticle particlePrefab;
     [SerializeField] private Transform firePos1;
     [SerializeField] private Transform firePos2;
     private ObjectPool<BulletController> bulletPool;
-    private ObjectPool<BulletParticle> particlePool;
 
     private void Awake()
     {
-        bulletPool = new(CreateBullet, OnGetBullet, OnReleaseBullet);
-        particlePool = new(CreateParticle, OnGetParticle, OnReleaseParticle);
+        bulletPool = new(CreateBullet, OnGetBullet, OnReleaseBullet, maxSize: 300);
     }
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButton(0))
         {
             FireBullet(firePos1);
             FireBullet(firePos2);
@@ -46,28 +43,13 @@ public class TurretFire : MonoBehaviour
 
     private void OnReleaseBullet(BulletController bullet)
     {
-        BulletParticle particle = particlePool.Get();
-        particle.transform.position = bullet.transform.position;
-        particle.transform.forward = -bullet.transform.forward;
-
         bullet.gameObject.SetActive(false);
     }
 
-    private BulletParticle CreateParticle()
+    public void GetCount(out int allCount, out int inActiveCount, out int activeCount)
     {
-        BulletParticle particle = Instantiate(particlePrefab);
-        particle.gameObject.SetActive(false);
-
-        return particle;
-    }
-
-    private void OnGetParticle(BulletParticle particle)
-    {
-        particle.gameObject.SetActive(true);
-    }
-
-    private void OnReleaseParticle(BulletParticle particle)
-    {
-        particle.gameObject.SetActive(false);
+        allCount = bulletPool.CountAll;
+        inActiveCount = bulletPool.CountInactive;
+        activeCount = bulletPool.CountActive;
     }
 }

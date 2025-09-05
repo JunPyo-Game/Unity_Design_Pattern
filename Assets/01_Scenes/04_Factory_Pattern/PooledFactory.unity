@@ -200,8 +200,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   factorys:
-  - {fileID: 11400000, guid: 3fb7ade2b0f383c439d7a67ff865b8dc, type: 2}
   - {fileID: 11400000, guid: d2e78e6abd3fa0e45bac52027e9fbb4e, type: 2}
+  - {fileID: 11400000, guid: 031009714f48bfd4ab9456e5ac171353, type: 2}
+  - {fileID: 11400000, guid: 1b13c43f7e012c648a07a65aa17cdd6c, type: 2}
 --- !u!1 &168575343
 GameObject:
   m_ObjectHideFlags: 0
@@ -979,6 +980,7 @@ MonoBehaviour:
   - {fileID: 29183678}
   - {fileID: 468881665}
   spawnInterval: 1
+  maxSpawn: 4
   player: {fileID: 28013969}
 --- !u!1 &2045697957
 GameObject:

@@ -1,9 +1,11 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(CapsuleCollider))]
 public class BulletController : MonoBehaviour, IPool<BulletController>
 {
     [SerializeField] private float moveSpeed = 10.0f;
+    [SerializeField] private TrailRenderer trailRenderer;
     private Rigidbody rb;
 
     public ObjectPool<BulletController> Pool { get; set ; }
@@ -28,5 +30,6 @@ public class BulletController : MonoBehaviour, IPool<BulletController>
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
         Pool.Release(this);
+        trailRenderer.Clear();
     }
 }
