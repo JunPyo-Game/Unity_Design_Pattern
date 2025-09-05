@@ -5,16 +5,17 @@ using UnityEngine;
 public class BulletController : MonoBehaviour, IPool<BulletController>
 {
     [SerializeField] private float moveSpeed = 10.0f;
-    [SerializeField] private TrailRenderer trailRenderer;
+
+    private TrailRenderer trailRenderer;
     private Rigidbody rb;
 
-    public ObjectPool<BulletController> Pool { get; set ; }
+    public ObjectPool<BulletController> Pool { get; set; }
     public bool IsReleased { get; set; } = false;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
-        rb.mass = 0.1f;
+        trailRenderer = GetComponentInChildren<TrailRenderer>();
     }
 
     private void FixedUpdate()
@@ -27,9 +28,13 @@ public class BulletController : MonoBehaviour, IPool<BulletController>
         if (IsReleased)
             return;
 
+        Pool.Release(this);
+    }
+
+    public void Reset()
+    {
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
-        Pool.Release(this);
         trailRenderer.Clear();
     }
 }

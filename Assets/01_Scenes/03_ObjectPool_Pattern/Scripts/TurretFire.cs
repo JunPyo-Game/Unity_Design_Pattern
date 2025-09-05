@@ -44,6 +44,7 @@ public class TurretFire : MonoBehaviour
     private void OnReleaseBullet(BulletController bullet)
     {
         bullet.gameObject.SetActive(false);
+        bullet.Reset();
     }
 
     public void GetCount(out int allCount, out int inActiveCount, out int activeCount)
