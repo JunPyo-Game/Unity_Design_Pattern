@@ -15,8 +15,11 @@ public class PlaneController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         rb.useGravity = false;
         rb.constraints = RigidbodyConstraints.FreezeRotation;
+    }
 
-        missileFactory = FactoryManager.Instance[FactoryType.Missile];
+    private void Start()
+    {
+        missileFactory = FactoryManager.Instance[FactoryType.Missile];    
     }
 
     private void Update()

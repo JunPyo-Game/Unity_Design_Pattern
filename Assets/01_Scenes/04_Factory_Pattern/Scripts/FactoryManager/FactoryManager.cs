@@ -5,7 +5,7 @@ using UnityEngine;
 /// 프로젝트 내 모든 팩토리를 통합 관리하는 매니저 클래스입니다.
 /// 싱글톤으로 동작하며, 팩토리 등록/조회/전체 반환 기능을 제공합니다.
 /// </summary>
-public class FactoryManager : Singleton<FactoryManager>
+public class FactoryManager : ScenceSingleton<FactoryManager>
 {
     /// <summary>
     /// 인스펙터에서 할당할 팩토리 배열입니다.

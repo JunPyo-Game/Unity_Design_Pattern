@@ -15,8 +15,7 @@ namespace UnityChanThirdView
 
         override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            if (prevVelocity != unityChan.Velocity)
-                animator.SetFloat(UnityChanHash.Velocity, unityChan.Velocity);
+            animator.SetFloat(UnityChanHash.Velocity, unityChan.Velocity);
 
             if (unityChan.CheckGround() && Input.GetKeyDown(KeyCode.Space))
                 animator.SetTrigger(UnityChanHash.Jump);
