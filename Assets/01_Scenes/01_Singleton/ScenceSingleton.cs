@@ -10,13 +10,11 @@ public class ScenceSingleton<T> : MonoBehaviour where T : Component
     {
         if (instance == null)
         {
-            Debug.Log("create");
             instance = this as T;
         }
         else
         {
             Destroy(gameObject);
-            Debug.Log("Destory");
         }
     }
 }

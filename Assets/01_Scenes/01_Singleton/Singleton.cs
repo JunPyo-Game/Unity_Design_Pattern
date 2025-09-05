@@ -4,40 +4,36 @@ public class Singleton<T> : MonoBehaviour where T : Component
 {
     private static T instance;
 
-    public static T Instance
-    {
-        get
-        {
-            Debug.Log("get");
-            if (instance == null)
-            {
-                Debug.Log("null");
-                instance = FindFirstObjectByType<T>();
+    public static T Instance => instance;
+    // {
+    //     get
+    //     {
+    //         if (instance == null)
+    //         {
+    //             instance = FindFirstObjectByType<T>();
 
-                if (instance == null)
-                {
-                    GameObject obj = new() { name = typeof(T).Name };
-                    instance = obj.AddComponent<T>();
-                    DontDestroyOnLoad(obj);
-                }
-            }
+    //             if (instance == null)
+    //             {
+    //                 GameObject obj = new() { name = typeof(T).Name };
+    //                 instance = obj.AddComponent<T>();
+    //                 DontDestroyOnLoad(obj);
+    //             }
+    //         }
 
-            return instance;
-        }
-    }
+    //         return instance;
+    //     }
+    // }
 
     public virtual void Awake()
     {
         if (instance == null)
         {
-            Debug.Log("create");
             instance = this as T;
             DontDestroyOnLoad(this);
         }
         else
         {
             Destroy(gameObject);
-            Debug.Log("Destory");
         }
     }
 }
